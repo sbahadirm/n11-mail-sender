@@ -4,6 +4,7 @@ import com.bahadirmemis.n11mailsender.request.SendMailRequest;
 import com.bahadirmemis.n11mailsender.response.MailInfoDTO;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,5 +46,11 @@ public class MailController {
 
     log.info("Mail send to " + request.receiver());
     log.info("Body: " + request.mailBody());
+  }
+
+  @DeleteMapping("/{id}")
+  public void delete(@PathVariable Long id) {
+
+    log.info("deleted! id: " + id);
   }
 }
