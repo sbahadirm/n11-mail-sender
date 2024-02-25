@@ -1,6 +1,8 @@
 package com.bahadirmemis.n11mailsender.controller;
 
+import com.bahadirmemis.n11mailsender.dto.SendBatchMailDTO;
 import com.bahadirmemis.n11mailsender.dto.SendMailDTO;
+import com.bahadirmemis.n11mailsender.request.SendBatchMailRequest;
 import com.bahadirmemis.n11mailsender.request.SendMailRequest;
 import com.bahadirmemis.n11mailsender.response.MailInfoDTO;
 import com.bahadirmemis.n11mailsender.service.MailService;
@@ -54,6 +56,12 @@ public class MailController {
     }
 
     return new MailInfoDTO(request.receiver(), getDefaultMailAddress(), LocalDateTime.now(), request.topic());
+  }
+
+  @PostMapping("/batch")
+  public Integer sendBatchMail(@RequestBody SendBatchMailRequest request) {
+    SendBatchMailDTO sendBatchMailDTO = new SendBatchMailDTO(request.receivers(), request.topic(), request.mailBody());
+    return mailService.sendBatchMail(sendBatchMailDTO);
   }
 
   @PutMapping
