@@ -1,8 +1,11 @@
 package com.bahadirmemis.n11mailsender.controller;
 
+import com.bahadirmemis.n11mailsender.dto.SendMailDTO;
 import com.bahadirmemis.n11mailsender.request.SendMailRequest;
 import com.bahadirmemis.n11mailsender.response.MailInfoDTO;
+import com.bahadirmemis.n11mailsender.service.MailService;
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/mails")
 @Slf4j
+@RequiredArgsConstructor
 public class MailController {
+
+  private final MailService mailService;
 
   @GetMapping("/default")
   public String getDefaultMailAddress() {
-    return "sbahadirm@gmail.com";
+    return "byaz.sbm@gmail.com";
   }
 
   @GetMapping("{id}/infos")
@@ -37,6 +43,15 @@ public class MailController {
 
     log.info("Mail send to " + request.receiver());
     log.info("Body: " + request.mailBody());
+
+    SendMailDTO sendMailDTO =
+        new SendMailDTO(request.receiver(), getDefaultMailAddress(), request.topic(), request.mailBody());
+
+    boolean isSuccess = mailService.sendMail(sendMailDTO);
+
+    if (!isSuccess){
+      log.error("An error occurred while sending email");
+    }
 
     return new MailInfoDTO(request.receiver(), getDefaultMailAddress(), LocalDateTime.now(), request.topic());
   }
